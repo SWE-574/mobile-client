@@ -3,6 +3,9 @@
  */
 export function formatTimeAgo(isoDate: string): string {
   const date = new Date(isoDate);
+  if (isNaN(date.getTime())) {
+    return "just now";
+  }
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMins = Math.floor(diffMs / 60000);

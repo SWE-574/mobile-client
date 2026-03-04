@@ -12,29 +12,47 @@ import { Chat, listChats } from "../../api/chats";
 export default function MessagesScreen() {
   const [messages, setMessages] = useState<Chat[]>([]);
 
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    listChats().then((data) => {
-      console.log("listChats response:", data);
-      setMessages(data);
-    });
+    (async () => {
+      try {
+        const data = await listChats();
+        console.log("listChats response:", data);
+        setMessages(data);
+      } catch (err) {
+        console.error("Failed to load chats:", err);
+        setError("Failed to load messages.");
+        setMessages([]);
+      }
+    })();
   }, []);
+
+  const renderItem = ({ item }: { item: Chat }) => {
+    return (
+      <TouchableOpacity style={styles.item}>
+        <Text style={styles.itemTitle}>{item?.other_user?.name}</Text>
+        <Text style={styles.itemBody}>{item?.last_message?.body}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <FlatList
-        data={messages}
-        renderItem={({ item }) => {
-          console.log("item:", item);
-          return (
-            <TouchableOpacity style={styles.item}>
-              <Text style={styles.itemTitle}>{item?.other_user?.name}</Text>
-              <Text style={styles.itemBody}>{item?.last_message?.body}</Text>
-            </TouchableOpacity>
-          );
-        }}
-        keyExtractor={(item) => item.handshake_id}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+      {error ? (
+        <View style={styles.item}>
+          <Text style={styles.itemBody}>{error}</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={messages}
+          renderItem={({ item }) => {
+            console.log("item:", item);
+            return renderItem({ item });
+          }}
+          keyExtractor={(item) => item.handshake_id}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+        />
+      )}
     </SafeAreaView>
   );
 }

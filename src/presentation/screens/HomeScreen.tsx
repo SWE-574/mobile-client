@@ -11,9 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { listServices } from "../../api/services";
 import { Service } from "../../api/types";
 import ServiceCard from "../components/ServiceCard";
-import QuickFilters, {
-  type QuickFilterId,
-} from "../components/QuickFilters";
+import QuickFilters, { type QuickFilterId } from "../components/QuickFilters";
 
 export default function HomeScreen() {
   const [services, setServices] = useState<Service[]>([]);
@@ -22,7 +20,11 @@ export default function HomeScreen() {
 
   useEffect(() => {
     listServices().then(({ results }) => {
-      setServices(results);
+      if (results) {
+        setServices(results);
+      } else {
+        setServices([]);
+      }
     });
   }, []);
 
@@ -34,7 +36,7 @@ export default function HomeScreen() {
         (s) =>
           s.title.toLowerCase().includes(q) ||
           (s.description || "").toLowerCase().includes(q) ||
-          s.tags?.some((t) => t.name.toLowerCase().includes(q))
+          s.tags?.some((t) => t.name.toLowerCase().includes(q)),
       );
     }
     switch (quickFilter) {
@@ -42,25 +44,25 @@ export default function HomeScreen() {
         list = list.filter(
           (s) =>
             s.location_type === "Online" ||
-            (s.location_type && s.location_type.toLowerCase() === "online")
+            (s.location_type && s.location_type.toLowerCase() === "online"),
         );
         break;
       case "recurrent":
         list = list.filter(
           (s) =>
             s.schedule_type === "Recurrent" ||
-            (s.schedule_type && s.schedule_type.toLowerCase() === "recurrent")
+            (s.schedule_type && s.schedule_type.toLowerCase() === "recurrent"),
         );
         break;
       case "weekend":
         list = list.filter((s) =>
-          (s.schedule_details || "").toLowerCase().includes("weekend")
+          (s.schedule_details || "").toLowerCase().includes("weekend"),
         );
         break;
       case "new":
         list = [...list].sort(
           (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
         );
         break;
       default:

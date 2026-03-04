@@ -3,13 +3,7 @@
  * POST /api/auth/login/, POST /api/auth/register/, POST /api/auth/refresh/
  */
 
-import {
-  apiRequest,
-  setAuthToken,
-  setAuthTokens,
-  clearAuth,
-  getRefreshToken,
-} from "./client";
+import { apiRequest, setAuthToken, setAuthTokens, clearAuth } from "./client";
 import { setStoredTokens } from "./storage";
 import type { TokenPair } from "./types";
 

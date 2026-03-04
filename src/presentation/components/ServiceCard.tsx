@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet, ViewStyle } from "react-native";
 import type { Service } from "../../api/types";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const HEADER_PALETTE = ["#6a48d8", "#2e4bf0", "#e53935", "#2e7d32", "#f9a825"];
 

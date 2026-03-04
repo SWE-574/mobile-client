@@ -36,7 +36,6 @@ export async function login(body: LoginRequest): Promise<TokenPair> {
     method: "POST",
     body,
   });
-  console.log("login response:", data);
   if (data.access && data.refresh) {
     setAuthTokens(data.access, data.refresh);
     await setStoredTokens({ access: data.access, refresh: data.refresh });

@@ -3,16 +3,40 @@
  * Handles base URL, auth token, and common request/response logic.
  */
 
+/**
+ * API client for The Hive API (apiary.selmangunes.com)
+ * Handles base URL, auth token, and common request/response logic.
+ */
+
+import { clearStoredTokens } from "./storage";
+
 const BASE_URL = 'https://apiary.selmangunes.com/api';
 
 let authToken: string | null = null;
+let refreshToken: string | null = null;
 
 export function setAuthToken(token: string | null): void {
   authToken = token;
 }
 
+export function setAuthTokens(access: string, refresh: string): void {
+  authToken = access;
+  refreshToken = refresh;
+}
+
 export function getAuthToken(): string | null {
   return authToken;
+}
+
+export function getRefreshToken(): string | null {
+  return refreshToken;
+}
+
+/** Clears in-memory tokens and persistent storage. */
+export async function clearAuth(): Promise<void> {
+  authToken = null;
+  refreshToken = null;
+  await clearStoredTokens();
 }
 
 export interface RequestConfig extends Omit<RequestInit, 'body'> {

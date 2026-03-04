@@ -3,7 +3,7 @@
  * Docs: https://apiary.selmangunes.com/api/docs/
  */
 
-export { apiRequest, setAuthToken, getAuthToken, BASE_URL } from './client';
+export { apiRequest, setAuthToken, setAuthTokens, getAuthToken, getRefreshToken, clearAuth, BASE_URL } from './client';
 export type { RequestConfig } from './client';
 export * from './types';
 

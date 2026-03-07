@@ -13,13 +13,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import type { ProfileStackParamList } from "../../navigation/ProfileStack";
+import type { RootStackParamList } from "../../navigation/RootNavigator";
 import { useAuth } from "../../context/AuthContext";
 import type { RegisterRequest } from "../../api/auth";
 
 export default function RegisterScreen() {
   const { register } = useAuth();
-  const navigation = useNavigation<NativeStackNavigationProp<ProfileStackParamList, "Register">>();
+  const navigation =
+    useNavigation<
+      NativeStackNavigationProp<RootStackParamList, "Register">
+    >();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -46,7 +49,7 @@ export default function RegisterScreen() {
         last_name: lastName.trim() || undefined,
       };
       await register(body);
-      navigation.goBack();
+      navigation.navigate("Main");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Registration failed.");
     } finally {
@@ -73,7 +76,10 @@ export default function RegisterScreen() {
               placeholder="Email *"
               placeholderTextColor="#999"
               value={email}
-              onChangeText={(t) => { setEmail(t); setError(""); }}
+              onChangeText={(t) => {
+                setEmail(t);
+                setError("");
+              }}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
@@ -100,7 +106,10 @@ export default function RegisterScreen() {
               placeholder="Password * (min 8 characters)"
               placeholderTextColor="#999"
               value={password}
-              onChangeText={(t) => { setPassword(t); setError(""); }}
+              onChangeText={(t) => {
+                setPassword(t);
+                setError("");
+              }}
               secureTextEntry
               editable={!loading}
             />
@@ -124,7 +133,9 @@ export default function RegisterScreen() {
               onPress={() => navigation.navigate("Login")}
               disabled={loading}
             >
-              <Text style={styles.linkText}>Already have an account? Sign in</Text>
+              <Text style={styles.linkText}>
+                Already have an account? Sign in
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

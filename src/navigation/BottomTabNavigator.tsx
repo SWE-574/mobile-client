@@ -1,76 +1,94 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
 import type { NavigatorScreenParams } from "@react-navigation/native";
-import HomeScreen from "../presentation/screens/HomeScreen";
-import ExploreScreen from "../presentation/screens/ExploreScreen";
-import ProfileStack from "./ProfileStack";
-import type { ProfileStackParamList } from "./ProfileStack";
-import MenuScreen from "../presentation/screens/MenuScreen";
-import MessagesScreen from "../presentation/screens/MessagesScreen";
+import HomeStack from "./HomeStack";
+import type { HomeStackParamList } from "./HomeStack";
+import ForumScreen from "../presentation/screens/ForumScreen";
+import PostServiceScreen from "../presentation/screens/PostServiceScreen";
+import MessagesStack from "./MessagesStack";
+import type { MessagesStackParamList } from "./MessagesStack";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { colors } from "../constants/colors";
+import { useNavigation } from "@react-navigation/native";
+import PostServiceTabButton from "../presentation/components/PostServiceTabButton";
+import ProfileStack, { ProfileStackParamList } from "./ProfileStack";
 
 export type BottomTabParamList = {
-  Home: undefined;
-  Explore: undefined;
+  Home: NavigatorScreenParams<HomeStackParamList>;
+  Forum: undefined;
   Profile: NavigatorScreenParams<ProfileStackParamList>;
-  Menu: undefined;
-  Messages: undefined;
+  PostService: undefined;
+  Messages: NavigatorScreenParams<MessagesStackParamList>;
 };
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
+  const navigation =
+    useNavigation<BottomTabNavigationProp<BottomTabParamList, "PostService">>();
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#000",
-        tabBarInactiveTintColor: "#999",
+        tabBarActiveTintColor: colors.GREEN,
+        tabBarInactiveTintColor: colors.GRAY500,
       }}
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStack}
         options={{
           title: "Home",
           tabBarLabel: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "home" : "home-outline"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
       <Tab.Screen
-        name="Explore"
-        component={ExploreScreen}
+        name="Forum"
+        component={ForumScreen}
         options={{
-          title: "Explore",
-          tabBarLabel: "Explore",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="compass" color={color} size={size} />
+          title: "Forum",
+          tabBarLabel: "Forum",
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "chatbubble" : "chatbubble-outline"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
 
       <Tab.Screen
-        name="Menu"
-        component={MenuScreen}
+        name="PostService"
+        component={PostServiceScreen}
         options={{
-          title: "Menu",
-          tabBarLabel: "Menu",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="menu" color={color} size={size} />
-          ),
+          title: "Post Service",
+          tabBarButton: (props) => <PostServiceTabButton {...props} />,
         }}
       />
       <Tab.Screen
         name="Messages"
-        component={MessagesScreen}
+        component={MessagesStack}
         options={{
           title: "Messages",
           tabBarLabel: "Messages",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbox" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "chatbox" : "chatbox-outline"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -80,8 +98,12 @@ export default function BottomTabNavigator() {
         options={{
           title: "Profile",
           tabBarLabel: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              color={color}
+              size={size}
+            />
           ),
         }}
       />

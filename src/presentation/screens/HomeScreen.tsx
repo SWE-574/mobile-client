@@ -6,14 +6,21 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { HomeStackParamList } from "../../navigation/HomeStack";
 import { listServices } from "../../api/services";
 import { Service } from "../../api/types";
 import ServiceCard from "../components/ServiceCard";
 import QuickFilters, { type QuickFilterId } from "../components/QuickFilters";
+import { colors } from "../../constants/colors";
 
 export default function HomeScreen() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList, "HomeFeed">>();
   const [services, setServices] = useState<Service[]>([]);
   const [search, setSearch] = useState("");
   const [quickFilter, setQuickFilter] = useState<QuickFilterId>("all");
@@ -74,10 +81,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
-        <Image
-          source={require("../../assets/splash-icon.png")}
-          style={styles.logo}
-        />
+        <Image source={require("../../assets/icon.png")} style={styles.logo} />
         <Text style={styles.title}>The Hive</Text>
       </View>
       <View style={styles.searchContainer}>
@@ -92,7 +96,15 @@ export default function HomeScreen() {
       <FlatList
         data={filteredServices}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ServiceCard service={item} />}
+        renderItem={({ item, index }) => (
+          <Pressable
+            onPress={() =>
+              navigation.navigate("ServiceDetail", { id: item.id })
+            }
+          >
+            <ServiceCard service={item} index={index} />
+          </Pressable>
+        )}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <Text style={styles.empty}>No services yet. Check back later.</Text>
@@ -105,14 +117,14 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.WHITE,
   },
   header: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "#fff",
+    backgroundColor: colors.WHITE,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: colors.GRAY200,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
@@ -128,7 +140,7 @@ const styles = StyleSheet.create({
   },
   empty: {
     textAlign: "center",
-    color: "#757575",
+    color: colors.GRAY500,
     paddingVertical: 32,
     fontSize: 15,
   },
@@ -139,15 +151,15 @@ const styles = StyleSheet.create({
   searchContainer: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "#fff",
+    backgroundColor: colors.WHITE,
   },
   searchInput: {
     padding: 12,
     borderRadius: 8,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: colors.GRAY100,
     fontSize: 14,
     color: "#1a1a1a",
-    borderColor: "#F7C12B",
+    borderColor: colors.GRAY300,
     borderWidth: 1,
   },
 });

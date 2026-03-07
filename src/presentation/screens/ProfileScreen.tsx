@@ -2,13 +2,16 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { ProfileStackParamList } from "../../navigation/ProfileStack";
 import { useAuth } from "../../context/AuthContext";
+import { logout } from "../../api/auth";
 
 export default function ProfileScreen() {
   const { user } = useAuth();
-  const navigation = useNavigation<NativeStackNavigationProp<ProfileStackParamList, "ProfileHome">>();
+  const navigation = useNavigation();
+  const rootNav = navigation.getParent() as
+    | import("@react-navigation/native").NavigationProp<ProfileStackParamList>
+    | undefined;
 
   if (!user) {
     return (
@@ -19,13 +22,13 @@ export default function ProfileScreen() {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => rootNav?.navigate("Login")}
         >
           <Text style={styles.buttonText}>Sign in</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.buttonSecondary}
-          onPress={() => navigation.navigate("Register")}
+          onPress={() => rootNav?.navigate("Register")}
         >
           <Text style={styles.buttonSecondaryText}>Create account</Text>
         </TouchableOpacity>
@@ -41,6 +44,9 @@ export default function ProfileScreen() {
       </Text>
       {user.bio ? <Text style={styles.bio}>{user.bio}</Text> : null}
       {user.email ? <Text style={styles.email}>{user.email}</Text> : null}
+      <TouchableOpacity style={styles.buttonSecondary} onPress={() => logout()}>
+        <Text style={styles.buttonSecondaryText}>Log out</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

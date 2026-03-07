@@ -1,6 +1,7 @@
 /**
- * API client for The Hive API (apiary.selmangunes.com)
- * Handles base URL, auth token, and common request/response logic.
+ * API client for The Hive API (apiary.selmangunes.com).
+ * BASE_URL matches API root; paths are relative to /api (e.g. /services/, /chats/).
+ * Docs: https://apiary.selmangunes.com/api/docs/
  */
 
 import { clearStoredTokens } from "./storage";

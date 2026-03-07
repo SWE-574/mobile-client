@@ -1,15 +1,23 @@
 import React from "react";
-import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  Image,
+  ImageBackground,
+} from "react-native";
 import type { Service } from "../../api/types";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
+import { colors } from "../../constants/colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const HEADER_PALETTE = ["#6a48d8", "#2e4bf0", "#e53935", "#2e7d32", "#f9a825"];
 
-function headerColorFor(id: string): string {
+function headerColorFor(index: number): string {
   let hash = 0;
-  for (let i = 0; i < id.length; i++)
-    hash = (hash << 5) - hash + id.charCodeAt(i);
-  return HEADER_PALETTE[Math.abs(hash) % HEADER_PALETTE.length];
+
+  return HEADER_PALETTE[index % HEADER_PALETTE.length];
 }
 
 function getInitials(firstName: string, lastName: string): string {
@@ -18,6 +26,152 @@ function getInitials(firstName: string, lastName: string): string {
   return (f + l).toUpperCase() || "?";
 }
 
+export interface ServiceCardProps {
+  service: Service;
+  style?: ViewStyle;
+  index?: number;
+}
+
+export default function ServiceCard({
+  service,
+  style,
+  index,
+}: ServiceCardProps) {
+  const headerColor = headerColorFor(index ?? 0);
+  const isOffer = service.type === "Offer";
+  const initials = getInitials(service.user.first_name, service.user.last_name);
+  const displayName =
+    [service.user.first_name, service.user.last_name]
+      .filter(Boolean)
+      .join(" ") || "Unknown";
+  const isRecurring = service.schedule_type === "Recurrent";
+
+  return (
+    <View style={[styles.card, style]}>
+      {service.media && service.media.length > 0 ? (
+        <ImageBackground
+          source={{ uri: (service.media[0] as { image: string }).image }}
+          style={styles.headerImage}
+        >
+          <Text
+            style={[
+              styles.headerTitle,
+              {
+                backgroundColor: colors.GREEN_TR,
+                padding: 10,
+                width: "100%",
+                textAlign: "left",
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+              },
+            ]}
+            numberOfLines={2}
+          >
+            {service.title}
+          </Text>
+        </ImageBackground>
+      ) : (
+        <View style={[styles.header, { backgroundColor: headerColor }]}>
+          <View style={styles.headerOverlay} />
+          <View style={[styles.headerOverlay, styles.headerOverlayRight]} />
+          <Text style={styles.headerTitle} numberOfLines={2}>
+            {service.title}
+          </Text>
+        </View>
+      )}
+
+      <View style={styles.body}>
+        <View
+          style={[
+            styles.typeBadge,
+            isOffer ? styles.typeOffer : styles.typeWant,
+          ]}
+        >
+          <Text
+            style={
+              isOffer ? styles.typeOfferBadgeText : styles.typeWantBadgeText
+            }
+          >
+            {isOffer ? "Offer" : "Want"}
+          </Text>
+        </View>
+
+        <View style={styles.userRow}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{initials}</Text>
+          </View>
+          <View style={styles.userMeta}>
+            <Text style={styles.userName}>{displayName}</Text>
+            <Text style={styles.timeAgo}>
+              • {formatTimeAgo(service.created_at)}
+            </Text>
+          </View>
+        </View>
+
+        <Text style={styles.description} numberOfLines={3}>
+          {service.description || "—"}
+        </Text>
+
+        <View style={styles.tagsRow}>
+          {service.duration ? (
+            <View style={styles.tag}>
+              <Ionicons name="time-outline" size={14} color={colors.GRAY500} />
+              <Text style={styles.tagText}>{service.duration}</Text>
+            </View>
+          ) : null}
+          {(service.location_area || service.location_type) && (
+            <View style={styles.tag}>
+              <Text style={styles.tagText}>
+                <Ionicons
+                  name="location-outline"
+                  size={14}
+                  color={colors.GRAY500}
+                />
+                {service.location_area || service.location_type}
+              </Text>
+            </View>
+          )}
+          {service.schedule_details && (
+            <View style={styles.tag}>
+              <Ionicons
+                name="calendar-outline"
+                size={14}
+                color={colors.GRAY500}
+              />
+              <Text style={styles.tagText}>{service.schedule_details}</Text>
+            </View>
+          )}
+          {isRecurring && (
+            <View style={[styles.tag, styles.tagRecurring]}>
+              <Ionicons name="repeat-outline" size={18} color={colors.PURPLE} />
+              <Text style={[styles.tagText, styles.tagTextRecurring]}>
+                Recurring
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {service.tags?.length > 0 && (
+          <View style={styles.hashtagsRow}>
+            {service.tags.slice(0, 5).map((tag) => (
+              <View key={tag.id} style={styles.hashtag}>
+                <Text style={styles.hashtagText}>#{tag.name}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        <View style={styles.footer}>
+          <Ionicons name="people-outline" size={16} color={colors.GRAY500} />
+
+          <Text style={styles.participantCount}>
+            {service.max_participants}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+}
 const styles = StyleSheet.create({
   card: {
     borderRadius: 14,
@@ -40,6 +194,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "flex-start",
   },
+  headerImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
+  },
   headerOverlay: {
     position: "absolute",
     width: 80,
@@ -57,33 +218,38 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#fff",
+    color: colors.WHITE,
     textAlign: "center",
   },
   body: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.WHITE,
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 14,
   },
   typeBadge: {
     position: "absolute",
-    right: 0,
-    top: 0,
+    right: 12,
+    top: 14,
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 8,
   },
   typeOffer: {
-    backgroundColor: "#81c784",
+    backgroundColor: "rgb(240, 253, 244)",
   },
   typeWant: {
-    backgroundColor: "#64b5f6",
+    backgroundColor: "rgb(239, 246, 255)",
   },
-  typeBadgeText: {
+  typeOfferBadgeText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#fff",
+    color: colors.GREEN,
+  },
+  typeWantBadgeText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: colors.BLUE,
   },
   userRow: {
     flexDirection: "row",
@@ -94,7 +260,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: "#388e3c",
+    backgroundColor: colors.GREEN,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 8,
@@ -102,7 +268,7 @@ const styles = StyleSheet.create({
   avatarText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#fff",
+    color: colors.WHITE,
   },
   userMeta: {
     flex: 1,
@@ -113,16 +279,16 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#1a1a1a",
+    color: colors.GRAY900,
     marginRight: 4,
   },
   timeAgo: {
     fontSize: 12,
-    color: "#757575",
+    color: colors.GRAY500,
   },
   description: {
     fontSize: 14,
-    color: "#333",
+    color: colors.GRAY900,
     lineHeight: 20,
     marginBottom: 12,
   },
@@ -137,20 +303,20 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 8,
-    backgroundColor: "#eeeeee",
+    backgroundColor: colors.GRAY100,
     marginRight: 6,
     marginBottom: 6,
   },
   tagRecurring: {
-    backgroundColor: "#e1bee7",
+    backgroundColor: colors.PURPLE_LT,
   },
   tagText: {
     fontSize: 12,
-    color: "#616161",
+    color: colors.GRAY500,
     marginLeft: 4,
   },
   tagTextRecurring: {
-    color: "#6a1b9a",
+    color: colors.PURPLE,
   },
   hashtagsRow: {
     flexDirection: "row",
@@ -161,13 +327,13 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 8,
     borderRadius: 6,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: colors.GRAY200,
     marginRight: 6,
     marginBottom: 4,
   },
   hashtagText: {
     fontSize: 12,
-    color: "#424242",
+    color: colors.GRAY900,
   },
   footer: {
     flexDirection: "row",
@@ -175,106 +341,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   participantCount: {
-    fontSize: 12,
-    color: "#9e9e9e",
-    marginLeft: 4,
+    fontSize: 14,
+    color: colors.GRAY500,
+    marginLeft: 8,
   },
 });
-
-export interface ServiceCardProps {
-  service: Service;
-  style?: ViewStyle;
-}
-
-export default function ServiceCard({ service, style }: ServiceCardProps) {
-  const headerColor = headerColorFor(service.id);
-  const isOffer = service.type === "Offer";
-  const initials = getInitials(service.user.first_name, service.user.last_name);
-  const displayName =
-    [service.user.first_name, service.user.last_name]
-      .filter(Boolean)
-      .join(" ") || "Unknown";
-  const isRecurring = service.schedule_type === "Recurrent";
-
-  return (
-    <View style={[styles.card, style]}>
-      <View style={[styles.header, { backgroundColor: headerColor }]}>
-        <View style={styles.headerOverlay} />
-        <View style={[styles.headerOverlay, styles.headerOverlayRight]} />
-        <Text style={styles.headerTitle} numberOfLines={2}>
-          {service.title}
-        </Text>
-      </View>
-
-      <View style={styles.body}>
-        <View
-          style={[
-            styles.typeBadge,
-            isOffer ? styles.typeOffer : styles.typeWant,
-          ]}
-        >
-          <Text style={styles.typeBadgeText}>{isOffer ? "Offer" : "Want"}</Text>
-        </View>
-
-        <View style={styles.userRow}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{initials}</Text>
-          </View>
-          <View style={styles.userMeta}>
-            <Text style={styles.userName}>{displayName}</Text>
-            <Text style={styles.timeAgo}>
-              • {formatTimeAgo(service.created_at)}
-            </Text>
-          </View>
-        </View>
-
-        <Text style={styles.description} numberOfLines={3}>
-          {service.description || "—"}
-        </Text>
-
-        <View style={styles.tagsRow}>
-          {service.duration ? (
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>🕐 {service.duration}</Text>
-            </View>
-          ) : null}
-          {(service.location_area || service.location_type) && (
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>
-                📍 {service.location_area || service.location_type}
-              </Text>
-            </View>
-          )}
-          {service.schedule_details && (
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>📅 {service.schedule_details}</Text>
-            </View>
-          )}
-          {isRecurring && (
-            <View style={[styles.tag, styles.tagRecurring]}>
-              <Text style={[styles.tagText, styles.tagTextRecurring]}>
-                🔄 Recurring
-              </Text>
-            </View>
-          )}
-        </View>
-
-        {service.tags?.length > 0 && (
-          <View style={styles.hashtagsRow}>
-            {service.tags.slice(0, 5).map((tag) => (
-              <View key={tag.id} style={styles.hashtag}>
-                <Text style={styles.hashtagText}>#{tag.name}</Text>
-              </View>
-            ))}
-          </View>
-        )}
-
-        <View style={styles.footer}>
-          <Text style={styles.participantCount}>
-            {service.max_participants}
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
-}

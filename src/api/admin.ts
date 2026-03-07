@@ -1,7 +1,7 @@
 /**
- * Admin API – reports (list, get, pause, resolve); users (list, adjust-karma, ban, unban, warn)
- * GET /api/admin/reports/, GET /api/admin/reports/{id}/, POST pause/resolve
- * GET /api/admin/users/, POST adjust-karma, ban, unban, warn
+ * Admin API – reports (list, get, pause, resolve); users (list, adjust-karma, ban, unban, warn);
+ * comments (list, get); audit-logs (list)
+ * Align with API root: https://apiary.selmangunes.com/api/docs/
  */
 
 import { apiRequest } from './client';
@@ -25,6 +25,26 @@ export interface AdminUser {
   last_name?: string;
   karma_score?: number;
   role?: string;
+  [key: string]: unknown;
+}
+
+export interface AdminComment {
+  id: string;
+  service?: string;
+  user?: string | object;
+  body?: string;
+  created_at?: string;
+  [key: string]: unknown;
+}
+
+export interface AuditLog {
+  id: string;
+  user?: string | object;
+  action?: string;
+  resource_type?: string;
+  resource_id?: string;
+  details?: unknown;
+  created_at?: string;
   [key: string]: unknown;
 }
 
@@ -68,4 +88,19 @@ export function unbanUser(userId: string, body?: object): Promise<AdminUser> {
 
 export function warnUser(userId: string, body?: { message?: string }): Promise<AdminUser> {
   return apiRequest<AdminUser>(`/admin/users/${userId}/warn/`, { method: 'POST', body: body ?? {} });
+}
+
+/** GET /api/admin/comments/ – list comments (admin). */
+export function listAdminComments(params?: AdminListParams): Promise<PaginatedResponse<AdminComment>> {
+  return apiRequest<PaginatedResponse<AdminComment>>('/admin/comments/', { params: params as Record<string, string | number | undefined> });
+}
+
+/** GET /api/admin/comments/{id}/ – get single comment (admin). */
+export function getAdminComment(id: string): Promise<AdminComment> {
+  return apiRequest<AdminComment>(`/admin/comments/${id}/`);
+}
+
+/** GET /api/admin/audit-logs/ – list audit logs (admin). */
+export function listAuditLogs(params?: AdminListParams): Promise<PaginatedResponse<AuditLog>> {
+  return apiRequest<PaginatedResponse<AuditLog>>('/admin/audit-logs/', { params: params as Record<string, string | number | undefined> });
 }

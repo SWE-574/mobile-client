@@ -18,7 +18,8 @@ import type { LoginRequest } from "../../api/auth";
 
 export default function LoginScreen() {
   const { login } = useAuth();
-  const navigation = useNavigation<NativeStackNavigationProp<ProfileStackParamList, "Login">>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<ProfileStackParamList, "Login">>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -34,7 +35,7 @@ export default function LoginScreen() {
     try {
       const body: LoginRequest = { email: email.trim(), password };
       await login(body);
-      navigation.goBack();
+      navigation.navigate("ProfileHome" as any);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Login failed.");
     } finally {
@@ -57,7 +58,10 @@ export default function LoginScreen() {
             placeholder="Email"
             placeholderTextColor="#999"
             value={email}
-            onChangeText={(t) => { setEmail(t); setError(""); }}
+            onChangeText={(t) => {
+              setEmail(t);
+              setError("");
+            }}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
@@ -68,7 +72,10 @@ export default function LoginScreen() {
             placeholder="Password"
             placeholderTextColor="#999"
             value={password}
-            onChangeText={(t) => { setPassword(t); setError(""); }}
+            onChangeText={(t) => {
+              setPassword(t);
+              setError("");
+            }}
             secureTextEntry
             editable={!loading}
           />
@@ -92,7 +99,9 @@ export default function LoginScreen() {
             onPress={() => navigation.navigate("Register")}
             disabled={loading}
           >
-            <Text style={styles.linkText}>Don&apos;t have an account? Sign up</Text>
+            <Text style={styles.linkText}>
+              Don&apos;t have an account? Sign up
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

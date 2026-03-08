@@ -3,6 +3,28 @@
  * WebSocket payloads may use body or content; we normalize for display.
  */
 
+/** API message shape (element of data.results from chat messages endpoint). */
+export interface ChatMessageApi {
+  id: string;
+  handshake?: string;
+  handshake_id?: string;
+  sender?: string;
+  sender_id?: string;
+  sender_name?: string;
+  sender_avatar_url?: string | null;
+  body: string;
+  created_at: string;
+  [key: string]: unknown;
+}
+
+/** Paginated response for chat messages (data.results). */
+export interface ChatMessagesResponse {
+  results: ChatMessageApi[];
+  count?: number;
+  next?: string | null;
+  previous?: string | null;
+}
+
 export interface ChatMessage {
   id: string;
   sender_id?: string;

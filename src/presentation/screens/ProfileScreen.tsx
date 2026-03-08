@@ -4,11 +4,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import type { ProfileStackParamList } from "../../navigation/ProfileStack";
 import { useAuth } from "../../context/AuthContext";
-import { logout } from "../../api/auth";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export default function ProfileScreen() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigation = useNavigation<NativeStackNavigationProp<ProfileStackParamList, "ProfileHome">>();
 
   if (!user) {
@@ -42,7 +41,7 @@ export default function ProfileScreen() {
       </Text>
       {user.bio ? <Text style={styles.bio}>{user.bio}</Text> : null}
       {user.email ? <Text style={styles.email}>{user.email}</Text> : null}
-      <TouchableOpacity style={styles.buttonSecondary} onPress={() => logout()}>
+      <TouchableOpacity style={styles.buttonSecondary} onPress={() => void logout()}>
         <Text style={styles.buttonSecondaryText}>Log out</Text>
       </TouchableOpacity>
     </SafeAreaView>

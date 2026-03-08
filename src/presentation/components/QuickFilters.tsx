@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { colors } from "../../constants/colors";
 
 export type QuickFilterId = "all" | "new" | "online" | "recurrent" | "weekend";
 
@@ -25,7 +26,6 @@ const FILTERS: QuickFilterItem[] = [
 ];
 
 const INACTIVE_COLOR = "#757575";
-const ACTIVE_BG = "#2e7d32";
 
 export interface QuickFiltersProps {
   selectedId: QuickFilterId;
@@ -91,7 +91,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   pillSelected: {
-    backgroundColor: ACTIVE_BG,
+    backgroundColor: colors.GREEN,
+    borderColor: colors.GREEN,
   },
   label: {
     fontSize: 14,

@@ -7,32 +7,14 @@ import type { BottomTabParamList } from "../../navigation/BottomTabNavigator";
 import MenuRow from "../components/MenuRow";
 import { useAuth } from "../../context/AuthContext";
 
-export default function MenuScreen() {
+export default function PostServiceScreen() {
   const { user, logout } = useAuth();
-  const navigation = useNavigation<BottomTabNavigationProp<BottomTabParamList, "Menu">>();
+  const navigation =
+    useNavigation<BottomTabNavigationProp<BottomTabParamList, "PostService">>();
 
   return (
-    <SafeAreaView edges={["top"]} style={styles.container}>
-      <Text style={styles.header}>Welcome to the Hive</Text>
-      <Text style={styles.subheader}>
-        {user
-          ? `Signed in as ${user.first_name} ${user.last_name}`
-          : "Sign in to track your exchanges and post services"}
-      </Text>
-      {user ? (
-        <MenuRow title="Log out" onPress={() => logout()} />
-      ) : (
-        <>
-          <MenuRow
-            title="Sign In"
-            onPress={() => navigation.navigate("Profile", { screen: "Login" })}
-          />
-          <MenuRow
-            title="Sign Up"
-            onPress={() => navigation.navigate("Profile", { screen: "Register" })}
-          />
-        </>
-      )}
+    <SafeAreaView style={styles.container}>
+      <Text>Post Service</Text>
     </SafeAreaView>
   );
 }

@@ -63,3 +63,7 @@ export function createChat(body?: CreateChatRequest): Promise<Chat> {
 export function getChat(id: string): Promise<Chat> {
   return apiRequest<Chat>(`/chats/${id}/`);
 }
+
+export function getGroupChat(id: string): Promise<Chat> {
+  return apiRequest<Chat>(`/group-chat/${id}/`);
+}

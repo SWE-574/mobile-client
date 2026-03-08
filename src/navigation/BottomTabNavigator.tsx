@@ -13,6 +13,7 @@ import type { MessagesStackParamList } from "./MessagesStack";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { colors } from "../constants/colors";
 import { useNavigation } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import PostServiceTabButton from "../presentation/components/PostServiceTabButton";
 import ProfileStack, { ProfileStackParamList } from "./ProfileStack";
 
@@ -29,6 +30,8 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 export default function BottomTabNavigator() {
   const navigation =
     useNavigation<BottomTabNavigationProp<BottomTabParamList, "PostService">>();
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -36,6 +39,9 @@ export default function BottomTabNavigator() {
         headerShown: false,
         tabBarActiveTintColor: colors.GREEN,
         tabBarInactiveTintColor: colors.GRAY500,
+        tabBarStyle: {
+          paddingBottom: insets.bottom + 10,
+        },
       }}
     >
       <Tab.Screen

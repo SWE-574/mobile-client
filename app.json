@@ -28,6 +28,13 @@
     "web": {
       "favicon": "./src/assets/icon.png"
     },
-    "plugins": ["expo-secure-store"]
+    "plugins": [
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "fe44c03c-a9d1-48aa-ac32-06115f5cab21"
+      }
+    }
   }
 }

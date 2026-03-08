@@ -1,7 +1,5 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../presentation/screens/HomeScreen";
-import ServiceDetailScreen from "../presentation/screens/ServiceDetailScreen";
 import ProfileScreen from "../presentation/screens/ProfileScreen";
 import LoginScreen from "../presentation/screens/LoginScreen";
 import RegisterScreen from "../presentation/screens/RegisterScreen";
@@ -14,7 +12,7 @@ export type ProfileStackParamList = {
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
 
-export default function HomeStack() {
+export default function ProfileStack() {
   return (
     <Stack.Navigator
       screenOptions={{

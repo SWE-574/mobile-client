@@ -1,6 +1,7 @@
 export const colors = {
   GREEN: "#2D5C4E",
   GREEN_TR: "rgba(45, 92, 78, 0.5)", // emerald-800 %50 opacity
+  BLUE_TR: "rgba(30, 64, 175, 0.5)", // blue-800 %50 opacity
   GREEN_LT: "#F0FDF4", // emerald-50
   GREEN_MD: "#D1FAE5", // emerald-100
   YELLOW: "#F8C84A", // brand yellow

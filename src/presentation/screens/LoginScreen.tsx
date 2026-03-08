@@ -15,6 +15,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { ProfileStackParamList } from "../../navigation/ProfileStack";
 import { useAuth } from "../../context/AuthContext";
 import type { LoginRequest } from "../../api/auth";
+import { colors } from "../../constants/colors";
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -35,7 +36,7 @@ export default function LoginScreen() {
     try {
       const body: LoginRequest = { email: email.trim(), password };
       await login(body);
-      navigation.navigate("ProfileHome" as any);
+      navigation.navigate("ProfileHome");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Login failed.");
     } finally {
@@ -56,7 +57,7 @@ export default function LoginScreen() {
           <TextInput
             style={styles.input}
             placeholder="Email"
-            placeholderTextColor="#999"
+            placeholderTextColor={colors.GRAY400}
             value={email}
             onChangeText={(t) => {
               setEmail(t);
@@ -70,7 +71,7 @@ export default function LoginScreen() {
           <TextInput
             style={styles.input}
             placeholder="Password"
-            placeholderTextColor="#999"
+            placeholderTextColor={colors.GRAY400}
             value={password}
             onChangeText={(t) => {
               setPassword(t);
@@ -88,7 +89,7 @@ export default function LoginScreen() {
             disabled={loading}
           >
             {loading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={colors.WHITE} />
             ) : (
               <Text style={styles.buttonText}>Sign in</Text>
             )}
@@ -112,7 +113,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.WHITE,
   },
   keyboard: {
     flex: 1,
@@ -125,31 +126,31 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1a1a1a",
+    color: colors.GRAY800,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
+    color: colors.GRAY600,
     marginBottom: 32,
   },
   input: {
     padding: 14,
     borderRadius: 8,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: colors.GRAY100,
     fontSize: 16,
-    color: "#1a1a1a",
+    color: colors.GRAY800,
     borderWidth: 1,
-    borderColor: "#eee",
+    borderColor: colors.GRAY200,
     marginBottom: 16,
   },
   error: {
-    color: "#c62828",
+    color: colors.RED,
     fontSize: 14,
     marginBottom: 12,
   },
   button: {
-    backgroundColor: "#1a1a1a",
+    backgroundColor: colors.GRAY800,
     padding: 16,
     borderRadius: 8,
     alignItems: "center",
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
-    color: "#fff",
+    color: colors.WHITE,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   linkText: {
-    color: "#1a1a1a",
+    color: colors.GRAY800,
     fontSize: 15,
   },
 });

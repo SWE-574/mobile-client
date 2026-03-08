@@ -5,13 +5,11 @@ import { useNavigation } from "@react-navigation/native";
 import type { ProfileStackParamList } from "../../navigation/ProfileStack";
 import { useAuth } from "../../context/AuthContext";
 import { logout } from "../../api/auth";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export default function ProfileScreen() {
   const { user } = useAuth();
-  const navigation = useNavigation();
-  const rootNav = navigation.getParent() as
-    | import("@react-navigation/native").NavigationProp<ProfileStackParamList>
-    | undefined;
+  const navigation = useNavigation<NativeStackNavigationProp<ProfileStackParamList, "ProfileHome">>();
 
   if (!user) {
     return (
@@ -22,13 +20,13 @@ export default function ProfileScreen() {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => rootNav?.navigate("Login")}
+          onPress={() => navigation.navigate("Login")}
         >
           <Text style={styles.buttonText}>Sign in</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.buttonSecondary}
-          onPress={() => rootNav?.navigate("Register")}
+          onPress={() => navigation.navigate("Register")}
         >
           <Text style={styles.buttonSecondaryText}>Create account</Text>
         </TouchableOpacity>

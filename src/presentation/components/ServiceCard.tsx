@@ -57,12 +57,12 @@ export default function ServiceCard({
             style={[
               styles.headerTitle,
               {
-                backgroundColor: colors.GREEN_TR,
-                padding: 10,
+                backgroundColor:
+                  service.type === "Offer" ? colors.GREEN_TR : colors.BLUE_TR,
+                padding: 8,
                 width: "100%",
                 textAlign: "left",
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
+                lineHeight: 30,
               },
             ]}
             numberOfLines={2}
@@ -175,8 +175,8 @@ export default function ServiceCard({
 const styles = StyleSheet.create({
   card: {
     borderRadius: 14,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
+    backgroundColor: colors.WHITE,
+    shadowColor: colors.GRAY900,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
+    borderColor: colors.GRAY200,
   },
   header: {
     paddingVertical: 16,
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   typeBadge: {
     position: "absolute",
     right: 12,
-    top: 14,
+    top: 12,
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 8,
@@ -242,13 +242,13 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(239, 246, 255)",
   },
   typeOfferBadgeText: {
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "700",
     color: colors.GREEN,
   },
   typeWantBadgeText: {
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "700",
     color: colors.BLUE,
   },
   userRow: {

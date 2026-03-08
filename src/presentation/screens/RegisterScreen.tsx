@@ -13,15 +13,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import type { RootStackParamList } from "../../navigation/RootNavigator";
+import type { ProfileStackParamList } from "../../navigation/ProfileStack";
 import { useAuth } from "../../context/AuthContext";
 import type { RegisterRequest } from "../../api/auth";
+import { colors } from "../../constants/colors";
 
 export default function RegisterScreen() {
   const { register } = useAuth();
   const navigation =
     useNavigation<
-      NativeStackNavigationProp<RootStackParamList, "Register">
+      NativeStackNavigationProp<ProfileStackParamList, "Register">
     >();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +50,7 @@ export default function RegisterScreen() {
         last_name: lastName.trim() || undefined,
       };
       await register(body);
-      navigation.navigate("Main");
+      navigation.navigate("ProfileHome");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Registration failed.");
     } finally {
@@ -74,7 +75,7 @@ export default function RegisterScreen() {
             <TextInput
               style={styles.input}
               placeholder="Email *"
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.GRAY400}
               value={email}
               onChangeText={(t) => {
                 setEmail(t);
@@ -88,7 +89,7 @@ export default function RegisterScreen() {
             <TextInput
               style={styles.input}
               placeholder="First name"
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.GRAY400}
               value={firstName}
               onChangeText={setFirstName}
               editable={!loading}
@@ -96,7 +97,7 @@ export default function RegisterScreen() {
             <TextInput
               style={styles.input}
               placeholder="Last name"
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.GRAY400}
               value={lastName}
               onChangeText={setLastName}
               editable={!loading}
@@ -104,7 +105,7 @@ export default function RegisterScreen() {
             <TextInput
               style={styles.input}
               placeholder="Password * (min 8 characters)"
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.GRAY400}
               value={password}
               onChangeText={(t) => {
                 setPassword(t);
@@ -122,7 +123,7 @@ export default function RegisterScreen() {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={colors.WHITE} />
               ) : (
                 <Text style={styles.buttonText}>Sign up</Text>
               )}
@@ -147,7 +148,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.WHITE,
   },
   keyboard: {
     flex: 1,
@@ -163,31 +164,31 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1a1a1a",
+    color: colors.GRAY800,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
+    color: colors.GRAY600,
     marginBottom: 32,
   },
   input: {
     padding: 14,
     borderRadius: 8,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: colors.GRAY100,
     fontSize: 16,
-    color: "#1a1a1a",
+    color: colors.GRAY800,
     borderWidth: 1,
-    borderColor: "#eee",
+    borderColor: colors.GRAY200,
     marginBottom: 16,
   },
   error: {
-    color: "#c62828",
+    color: colors.RED,
     fontSize: 14,
     marginBottom: 12,
   },
   button: {
-    backgroundColor: "#1a1a1a",
+    backgroundColor: colors.GRAY800,
     padding: 16,
     borderRadius: 8,
     alignItems: "center",
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
-    color: "#fff",
+    color: colors.WHITE,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   linkText: {
-    color: "#1a1a1a",
+    color: colors.GRAY800,
     fontSize: 15,
   },
 });

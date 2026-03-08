@@ -24,7 +24,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { HomeStackParamList } from "../../navigation/HomeStack";
 import { getService, addServiceInterest } from "../../api/services";
 import type { Service } from "../../api/types";
-import { formatTimeAgo } from "../utils/formatTimeAgo";
+import { formatTimeAgo } from "../../utils/formatTimeAgo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { colors } from "../../constants/colors";
 import ImagePreviewModal from "../components/ImagePreviewModal";
@@ -268,12 +268,20 @@ export default function ServiceDetailScreen() {
             <View
               style={[
                 styles.typeBadge,
-                isOffer ? styles.typeOffer : styles.typeWant,
+                service.type === "Offer"
+                  ? styles.typeOffer
+                  : service.type === "Need"
+                    ? styles.typeWant
+                    : styles.typeEvent,
               ]}
             >
               <Text
                 style={
-                  isOffer ? styles.typeOfferBadgeText : styles.typeWantBadgeText
+                  service.type === "Offer"
+                    ? styles.typeOfferBadgeText
+                    : service.type === "Need"
+                      ? styles.typeWantBadgeText
+                      : styles.typeEventBadgeText
                 }
               >
                 {service.type}
@@ -640,6 +648,10 @@ const getStyles = (topInset: number, bottomInset: number) =>
     typeWant: {
       backgroundColor: "rgba(239, 246, 255, 0.95)",
     },
+
+    typeEvent: {
+      backgroundColor: "rgba(255, 245, 238, 0.95)",
+    },
     typeOfferBadgeText: {
       fontSize: 12,
       fontWeight: "800",
@@ -650,6 +662,12 @@ const getStyles = (topInset: number, bottomInset: number) =>
       fontSize: 12,
       fontWeight: "800",
       color: colors.BLUE,
+      letterSpacing: 0.4,
+    },
+    typeEventBadgeText: {
+      fontSize: 12,
+      fontWeight: "800",
+      color: colors.AMBER,
       letterSpacing: 0.4,
     },
     headerTitle: {

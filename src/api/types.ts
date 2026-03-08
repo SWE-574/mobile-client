@@ -33,10 +33,10 @@ export interface Tag {
   wikidata_info?: unknown | null;
 }
 
-export type ServiceType = 'Offer' | 'Need';
-export type ServiceStatus = 'Active' | 'Completed' | 'Cancelled' | string;
-export type LocationType = 'In-Person' | 'Online' | 'remote' | string;
-export type ScheduleType = 'One-Time' | 'Recurrent' | string;
+export type ServiceType = "Offer" | "Need" | "Event";
+export type ServiceStatus = "Active" | "Completed" | "Cancelled" | string;
+export type LocationType = "In-Person" | "Online" | "remote" | string;
+export type ScheduleType = "One-Time" | "Recurrent" | string;
 
 export interface Service {
   id: string;
@@ -53,6 +53,7 @@ export interface Service {
   max_participants: number;
   schedule_type?: ScheduleType;
   schedule_details?: string | null;
+  participant_count?: number;
   created_at: string;
   tags: Tag[];
   comment_count?: number;

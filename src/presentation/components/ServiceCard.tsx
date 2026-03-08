@@ -8,17 +8,9 @@ import {
   ImageBackground,
 } from "react-native";
 import type { Service } from "../../api/types";
-import { formatTimeAgo } from "../utils/formatTimeAgo";
+import { formatTimeAgo } from "../../utils/formatTimeAgo";
 import { colors } from "../../constants/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-
-const HEADER_PALETTE = ["#6a48d8", "#2e4bf0", "#e53935", "#2e7d32", "#f9a825"];
-
-function headerColorFor(index: number): string {
-  let hash = 0;
-
-  return HEADER_PALETTE[index % HEADER_PALETTE.length];
-}
 
 function getInitials(firstName: string, lastName: string): string {
   const f = (firstName || "").trim().charAt(0) || "";
@@ -37,7 +29,12 @@ export default function ServiceCard({
   style,
   index,
 }: ServiceCardProps) {
-  const headerColor = headerColorFor(index ?? 0);
+  const headerColor =
+    service.type === "Offer"
+      ? colors.GREEN
+      : service.type === "Need"
+        ? colors.BLUE
+        : colors.AMBER;
   const isOffer = service.type === "Offer";
   const initials = getInitials(service.user.first_name, service.user.last_name);
   const displayName =
@@ -58,7 +55,11 @@ export default function ServiceCard({
               styles.headerTitle,
               {
                 backgroundColor:
-                  service.type === "Offer" ? colors.GREEN_TR : colors.BLUE_TR,
+                  service.type === "Offer"
+                    ? colors.GREEN_TR
+                    : service.type === "Need"
+                      ? colors.BLUE_TR
+                      : colors.AMBER_TR,
                 padding: 8,
                 width: "100%",
                 textAlign: "left",
@@ -84,15 +85,27 @@ export default function ServiceCard({
         <View
           style={[
             styles.typeBadge,
-            isOffer ? styles.typeOffer : styles.typeWant,
+            isOffer || service.type === "Offer"
+              ? styles.typeOffer
+              : service.type === "Need"
+                ? styles.typeWant
+                : styles.typeEvent,
           ]}
         >
           <Text
             style={
-              isOffer ? styles.typeOfferBadgeText : styles.typeWantBadgeText
+              isOffer
+                ? styles.typeOfferBadgeText
+                : service.type === "Need"
+                  ? styles.typeWantBadgeText
+                  : styles.typeEventBadgeText
             }
           >
-            {isOffer ? "Offer" : "Want"}
+            {service.type === "Offer"
+              ? "Offer"
+              : service.type === "Need"
+                ? "Want"
+                : "Event"}
           </Text>
         </View>
 
@@ -165,7 +178,9 @@ export default function ServiceCard({
           <Ionicons name="people-outline" size={16} color={colors.GRAY500} />
 
           <Text style={styles.participantCount}>
-            {service.max_participants}
+            {service.participant_count
+              ? service.participant_count + "/" + service.max_participants
+              : "0/" + service.max_participants}
           </Text>
         </View>
       </View>
@@ -241,6 +256,9 @@ const styles = StyleSheet.create({
   typeWant: {
     backgroundColor: "rgb(239, 246, 255)",
   },
+  typeEvent: {
+    backgroundColor: "rgb(255, 245, 238)",
+  },
   typeOfferBadgeText: {
     fontSize: 14,
     fontWeight: "700",
@@ -250,6 +268,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
     color: colors.BLUE,
+  },
+  typeEventBadgeText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.AMBER,
   },
   userRow: {
     flexDirection: "row",

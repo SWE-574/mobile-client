@@ -7,6 +7,7 @@ export const colors = {
   YELLOW: "#F8C84A", // brand yellow
   YELLOW_LT: "rgba(248, 200, 74, 0.8)", // brand yellow %80 opacity
   AMBER: "#D97706", // amber-600
+  AMBER_TR: "rgba(217, 119, 6, 0.5)", // amber-600 %50 opacity
   AMBER_LT: "#FFFBEB", // amber-50
   BLUE: "#1D4ED8", // blue-700
   BLUE_LT: "#EFF6FF", // blue-50
